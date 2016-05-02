@@ -175,7 +175,7 @@ func request(url string) ([]byte, error) {
     return body, err
 }
 
-// AlbumCover gets the album cover art from the Last.fm database throught it's
+// AlbumCover gets the album cover art from the Last.fm database through out it's
 // dedicated API.
 func AlbumCover(album string, artist string) (Result, error) {
     url := apiUrl + "album.getinfo&api_key=" + apiKey + "&album=" + album + "&artist=" + artist
@@ -192,7 +192,7 @@ func AlbumCover(album string, artist string) (Result, error) {
     return parseResults(data, "album")
 }
 
-// ArtistCover gets the artist cover art from the Last.fm database throught it's
+// ArtistCover gets the artist cover art from the Last.fm database through out it's
 // dedicated API.
 func ArtistCover(artist string) (Result, error) {
     url := apiUrl + "artist.getinfo&api_key=" + apiKey + "&artist=" + artist
@@ -209,7 +209,7 @@ func ArtistCover(artist string) (Result, error) {
     return parseResults(data, "artist")
 }
 
-// TrackCover gets the track cover art from the Last.fm database throught it's
+// TrackCover gets the track cover art from the Last.fm database through out it's
 // dedicated API.
 func TrackCover(track string, artist string) (Result, error) {
     url := apiUrl + "track.getinfo&api_key=" + apiKey + "&artist=" + artist + "&track=" + track
