@@ -5,6 +5,7 @@ package lastfmart
 import (
     "errors"
     "reflect"
+    "net/url"
     "net/http"
     "io/ioutil"
     "encoding/json"
@@ -63,7 +64,7 @@ func AutoCorrect(act bool) {
 
 // Configure must be called before calling any other requests to set the Last.fm API Key
 func Configure(key string) {
-    apiKey = key
+    apiKey = url.QueryEscape(key)
     apiCorrect = false
 }
 
@@ -178,13 +179,14 @@ func request(url string) ([]byte, error) {
 // AlbumCover gets the album cover art from the Last.fm database through out it's
 // dedicated API.
 func AlbumCover(album string, artist string) (Result, error) {
-    url := apiUrl + "album.getinfo&api_key=" + apiKey + "&album=" + album + "&artist=" + artist
+    Url := apiUrl + "album.getinfo&api_key=" + apiKey + "&album="
+    Url += url.QueryEscape(album) + "&artist=" + url.QueryEscape(artist)
 
     if apiCorrect {
-        url += "&autocorrect=1"
+        Url += "&autocorrect=1"
     }
 
-    data, err := request(url)
+    data, err := request(Url)
     if err != nil {
         return Result{}, err
     }
@@ -195,13 +197,14 @@ func AlbumCover(album string, artist string) (Result, error) {
 // ArtistCover gets the artist cover art from the Last.fm database through out it's
 // dedicated API.
 func ArtistCover(artist string) (Result, error) {
-    url := apiUrl + "artist.getinfo&api_key=" + apiKey + "&artist=" + artist
+    Url := apiUrl + "artist.getinfo&api_key=" + apiKey + "&artist="
+    Url += url.QueryEscape(artist)
 
     if apiCorrect {
-        url += "&autocorrect=1"
+        Url += "&autocorrect=1"
     }
 
-    data, err := request(url)
+    data, err := request(Url)
     if err != nil {
         return Result{}, err
     }
@@ -212,13 +215,14 @@ func ArtistCover(artist string) (Result, error) {
 // TrackCover gets the track cover art from the Last.fm database through out it's
 // dedicated API.
 func TrackCover(track string, artist string) (Result, error) {
-    url := apiUrl + "track.getinfo&api_key=" + apiKey + "&artist=" + artist + "&track=" + track
+    Url := apiUrl + "track.getinfo&api_key=" + apiKey + "&artist="
+    Url += url.QueryEscape(artist) + "&track=" + url.QueryEscape(track)
 
     if apiCorrect {
-        url += "&autocorrect=1"
+        Url += "&autocorrect=1"
     }
 
-    data, err := request(url)
+    data, err := request(Url)
     if err != nil {
         return Result{}, err
     }
