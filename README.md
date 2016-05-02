@@ -6,13 +6,18 @@ etc...
 
 <strong>Important: This package is strictly for a non-commercial use.</strong>
 
-## Installing package
+## Install
+Full package
 ```
-go get github.com/piraveen/covertart
+go get -d github.com/piraveen/coverart
+```
+Last.fm package only
+```
+go get github.com/piraveen/coverart/lastfmart
 ```
 
-## Documentation
-Please do read the package [documentation]() for further details.
+<!-- ## Documentation -->
+<!-- Please do read the package [documentation](http://) for further details. -->
 
 ## Commands
 ### Using Last.fm API
@@ -47,7 +52,7 @@ lastfmart.ArtistCover("artist name")
 lastfmart.TrackArt("track name", "artist name")
 ```
 
-Sample code for testing:
+Sample code for testing Last.fm API:
 ```go
 package main
 
