@@ -7,13 +7,12 @@ import (
     "reflect"
     "net/http"
     "io/ioutil"
-    "unicode/utf8"
     "encoding/json"
 )
 
-var APIKey string
-var APICorrect bool
-const APIUrl = "http://ws.audioscrobbler.com/2.0/?format=json&method="
+var apiKey string
+var apiCorrect bool
+const apiUrl = "http://ws.audioscrobbler.com/2.0/?format=json&method="
 
 type Result struct {
     Small       string
@@ -59,17 +58,22 @@ type httpError struct {
 // notify the Last.fm API to fix spelling mistakes
 // Note: Result may not be as expected
 func AutoCorrect(act bool) {
-    APICorrect = true
+    apiCorrect = true
 }
 
 // Configure must be called before calling any other requests to set the Last.fm API Key
 func Configure(key string) {
-    APIKey = key
-    APICorrect = false
+    apiKey = key
+    apiCorrect = false
+}
+
+// CheckAPIKey provides a simple method to verify if the API Key has been set
+func CheckAPIKey() bool {
+    return len(apiKey) > 0
 }
 
 func setDefaultCover(res Result) Result {
-    if utf8.RuneCountInString(res.Default) > 0 {
+    if len(res.Default) > 0 {
         return res
     }
 
@@ -86,7 +90,7 @@ func buildResult(images []image) (Result, error) {
     min := false
 
     for _, value := range images {
-        if utf8.RuneCountInString(value.Url) > 0 {
+        if len(value.Url) > 0 {
             min = true
 
             switch value.Size {
@@ -174,9 +178,9 @@ func request(url string) ([]byte, error) {
 // AlbumCover gets the album cover art from the Last.fm database throught it's
 // dedicated API.
 func AlbumCover(album string, artist string) (Result, error) {
-    url := APIUrl + "album.getinfo&api_key=" + APIKey + "&album=" + album + "&artist=" + artist
+    url := apiUrl + "album.getinfo&api_key=" + apiKey + "&album=" + album + "&artist=" + artist
 
-    if APICorrect {
+    if apiCorrect {
         url += "&autocorrect=1"
     }
 
@@ -191,9 +195,9 @@ func AlbumCover(album string, artist string) (Result, error) {
 // ArtistCover gets the artist cover art from the Last.fm database throught it's
 // dedicated API.
 func ArtistCover(artist string) (Result, error) {
-    url := APIUrl + "artist.getinfo&api_key=" + APIKey + "&artist=" + artist
+    url := apiUrl + "artist.getinfo&api_key=" + apiKey + "&artist=" + artist
 
-    if APICorrect {
+    if apiCorrect {
         url += "&autocorrect=1"
     }
 
@@ -208,9 +212,9 @@ func ArtistCover(artist string) (Result, error) {
 // TrackCover gets the track cover art from the Last.fm database throught it's
 // dedicated API.
 func TrackCover(track string, artist string) (Result, error) {
-    url := APIUrl + "track.getinfo&api_key=" + APIKey + "&artist=" + artist + "&track=" + track
+    url := apiUrl + "track.getinfo&api_key=" + apiKey + "&artist=" + artist + "&track=" + track
 
-    if APICorrect {
+    if apiCorrect {
         url += "&autocorrect=1"
     }
 

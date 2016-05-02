@@ -11,48 +11,64 @@ etc...
 go get github.com/piraveen/covertart
 ```
 
+## Documentation
+Please do read the package [documentation]() for further details.
+
 ## Commands
-### General
-All the response for the requests below will be sent in this format:
-```go
-Result{
-    Small: "http://url"
-    Medium: "http://url"
-    Large: "http://url"
-    ExtraLarge: "http://url"
-    Mega: "http://url"
-    Default: "http://url"
-}
+### Using Last.fm API
+Read more about the [last.fm](http://last.fm) API [here](http://www.last.fm/api).
+
+- Importing
 ```
-Note: Only the `Default` field will be always present. And if no images were found
-a go `error` object will be returned.
-
-Please do read the EXAMPLE.md for further details.
-
-### Last.fm API
-Read more about the [last.fm](http://last.fm) API [here](http://www.last.fm/api)
-
+import "github.com/piraveen/coverart/lastfmart"
+```
 - Configuration
 ```
-lastfmart.Configure("LASTFM_API_KEY")
+lastfmart.Configure("LASTFM_APIKEY")
 ```
-
 - Enable Auto correction
 ```
 lastfmart.AutoCorrect(true)
 ```
-
 - Get Album Art
 ```
 lastfmart.AlbumCover("album name", "artist name")
 ```
-
 - Get Artist Art
 ```
 lastfmart.ArtistCover("artist name")
 ```
-
 - Get Track Art
 ```
 lastfmart.TrackArt("track name", "artist name")
+```
+
+Sample code for testing:
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/piraveen/coverart/lastfmart"
+)
+
+func main() {
+    // The API Keys can be defined in your code itself, however I recommend
+    // loading them through an environment variable like this:
+    apiKey := os.Getenv("LASTFM_APIKEY")
+    lastfmart.Configure(apiKey)
+
+    if !lastfmart.CheckAPIKey() {
+        // Abort action
+        fmt.Printf("No API Key or incorrectly set\n")
+        // Output: No API Key or incorrectly set
+        return;
+    }
+
+    results, err := lastfmart.ArtistCover("ellie goulding")
+    if err == nil {
+        fmt.Printf("ArtistCover %v\n", results.Default)
+        // Output: ArtistCover http://img2-ak.lst.fm/i/u/arQ/eb410194931c9427e2240023426be62b.png
+    }
+}
 ```
