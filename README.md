@@ -16,9 +16,6 @@ Last.fm package only
 go get github.com/piraveen/coverart/lastfmart
 ```
 
-<!-- ## Documentation -->
-<!-- Please do read the package [documentation](http://) for further details. -->
-
 ## Commands
 ### Using Last.fm API
 Read more about the [last.fm](http://last.fm) API [here](http://www.last.fm/api).
@@ -81,3 +78,6 @@ func main() {
     }
 }
 ```
+
+## Documentation
+Please read the package [documentation](https://godoc.org/github.com/piraveen/coverart) details here.
