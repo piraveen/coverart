@@ -2,6 +2,7 @@ package coverart
 
 import (
     "errors"
+    "reflect"
     "net/http"
     "io/ioutil"
     "unicode/utf8"
@@ -21,33 +22,33 @@ type Result struct {
     Default     string
 }
 
-type Image struct {
+type image struct {
     Size    string      `json:size`
     Url     string      `json:"#text"`
 }
 
-type Album struct {
+type album struct {
     Name    string      `json:name`
-    Image   []Image     `json:image`
+    Image   []image     `json:image`
 }
 
-type Track struct {
+type track struct {
     Name    string      `json:name`
-    Album   *Album      `json:album`
+    Album   *album      `json:album`
 }
 
-type Artist struct {
+type artist struct {
     Name    string      `json:name`
-    Image   []Image     `json:image`
+    Image   []image     `json:image`
 }
 
-type HttpResponse struct {
-    Album   *Album      `json:album`
-    Artist  *Artist     `json:artist`
-    Track   *Track      `json:track`
+type httpResponse struct {
+    Album   *album      `json:album`
+    Artist  *artist     `json:artist`
+    Track   *track      `json:track`
 }
 
-type HttpError struct {
+type httpError struct {
     Error   *int        `json:error`
     Message *string     `json:message`
 }
@@ -64,10 +65,20 @@ func Configure(key string) {
     APICorrect = false
 }
 
+func setDefaultCover(res Result) Result {
+    if utf8.RuneCountInString(res.Default) > 0 {
+        return res
+    }
+
+    v := reflect.ValueOf(res)
+    res.Default = v.Field(0).String()
+    return res
+}
+
 // Build all the images into size typed object for easy access
 // { Result.SizeName }
 // e.g: Result.Small would return the url for a small size cover art
-func buildResult(images []Image) (Result, error) {
+func buildResult(images []image) (Result, error) {
     res := Result{}
     min := false
 
@@ -96,13 +107,13 @@ func buildResult(images []Image) (Result, error) {
         return res, errors.New("No image was found")
     }
 
-    return res, nil
+    return setDefaultCover(res), nil
 }
 
 // Parse http response and build results based on requested type
 // parse { album, artist, track }
 func parseResults(data []byte, parse string) (Result, error) {
-    resp := HttpResponse{}
+    resp := httpResponse{}
 
     err := json.Unmarshal(data, &resp)
     if err != nil {
@@ -131,7 +142,7 @@ func parseResults(data []byte, parse string) (Result, error) {
 
 // Executes an http request and returns error or response body
 func request(url string) ([]byte, error) {
-    resErr := HttpError{}
+    resErr := httpError{}
     resp, err := http.Get(url)
 
     if err != nil {
