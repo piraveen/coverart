@@ -26,6 +26,10 @@ import "github.com/piraveen/coverart/lastfmart"
 ```
 lastfmart.Configure("LASTFM_APIKEY")
 ```
+- Checking if API Key is set
+```
+lastfmart.CheckAPIKey()
+```
 - Enable Auto correction
 ```
 lastfmart.AutoCorrect(true)
