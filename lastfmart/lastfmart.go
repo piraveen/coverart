@@ -1,4 +1,6 @@
-package coverart
+// Package lastfmart provides few helper methods to get album, artist or track
+// cover art from the Last.fm API
+package lastfmart
 
 import (
     "errors"
@@ -53,13 +55,14 @@ type httpError struct {
     Message *string     `json:message`
 }
 
-// Activate auto correct for spelling mistakes
+// AutoCorrect activates the autocorrect parameter in the Last.fm query url to
+// notify the Last.fm API to fix spelling mistakes
 // Note: Result may not be as expected
 func AutoCorrect(act bool) {
     APICorrect = true
 }
 
-// Configure API Key and other required fields
+// Configure must be called before calling any other requests to set the Last.fm API Key
 func Configure(key string) {
     APIKey = key
     APICorrect = false
@@ -168,9 +171,8 @@ func request(url string) ([]byte, error) {
     return body, err
 }
 
-// Get Album Cover art
-// Parametes: Album name, Artist name
-// Returns: Result, error object
+// AlbumCover gets the album cover art from the Last.fm database throught it's
+// dedicated API.
 func AlbumCover(album string, artist string) (Result, error) {
     url := APIUrl + "album.getinfo&api_key=" + APIKey + "&album=" + album + "&artist=" + artist
 
@@ -186,9 +188,8 @@ func AlbumCover(album string, artist string) (Result, error) {
     return parseResults(data, "album")
 }
 
-// Get Artist Cover art
-// Parametes: Artist name
-// Returns: Result, error object
+// ArtistCover gets the artist cover art from the Last.fm database throught it's
+// dedicated API.
 func ArtistCover(artist string) (Result, error) {
     url := APIUrl + "artist.getinfo&api_key=" + APIKey + "&artist=" + artist
 
@@ -204,9 +205,8 @@ func ArtistCover(artist string) (Result, error) {
     return parseResults(data, "artist")
 }
 
-// Get Track Cover art
-// Parametes: Track name, Artist name
-// Returns: Result, error object
+// TrackCover gets the track cover art from the Last.fm database throught it's
+// dedicated API.
 func TrackCover(track string, artist string) (Result, error) {
     url := APIUrl + "track.getinfo&api_key=" + APIKey + "&artist=" + artist + "&track=" + track
 
