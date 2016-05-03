@@ -13,7 +13,7 @@ package coverart
 import (
 	"errors"
 	"github.com/piraveen/coverart/lastfmart"
-	"github.com/piraveen/coverartbk/itunesart"
+	"github.com/piraveen/coverart/itunesart"
 )
 
 // The ItunesArt represents the specific helper methods of the itunesart package
