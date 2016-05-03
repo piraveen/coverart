@@ -11,48 +11,47 @@
 package coverart
 
 import (
-    "errors"
-    "github.com/piraveen/coverartbk/itunesart"
-    "github.com/piraveen/coverart/lastfmart"
+	"errors"
+	"github.com/piraveen/coverart/lastfmart"
+	"github.com/piraveen/coverartbk/itunesart"
 )
 
 // The ItunesArt represents the specific helper methods of the itunesart package
 type ItunesArt struct {
-    TrackCover  func(track string, artist string) (itunesart.Result, error)
-    AlbumCover  func(album string, artist string) (itunesart.Result, error)
+	TrackCover func(track string, artist string) (itunesart.Result, error)
+	AlbumCover func(album string, artist string) (itunesart.Result, error)
 }
 
 // The LastFmArt represents the specific helper methods of the lastfmart package
 type LastFmArt struct {
-    CheckAPIKey func() bool
-    AutoCorrect func(v bool)
-    TrackCover  func(track string, artist string) (lastfmart.Result, error)
-    AlbumCover  func(album string, artist string) (lastfmart.Result, error)
-    ArtistCover func(artist string) (lastfmart.Result, error)
+	CheckAPIKey func() bool
+	AutoCorrect func(v bool)
+	TrackCover  func(track string, artist string) (lastfmart.Result, error)
+	AlbumCover  func(album string, artist string) (lastfmart.Result, error)
+	ArtistCover func(artist string) (lastfmart.Result, error)
 }
-
 
 // LastFm configures and returns all the exported methods of the package lastfmart
 func LastFm(apiKey string) (LastFmArt, error) {
-    lastfmart.Configure(apiKey)
+	lastfmart.Configure(apiKey)
 
-    if !lastfmart.CheckAPIKey() {
-        return LastFmArt{}, errors.New("API Key is not set")
-    }
+	if !lastfmart.CheckAPIKey() {
+		return LastFmArt{}, errors.New("API Key is not set")
+	}
 
-    return LastFmArt{
-        lastfmart.CheckAPIKey,
-        lastfmart.AutoCorrect,
-        lastfmart.TrackCover,
-        lastfmart.AlbumCover,
-        lastfmart.ArtistCover,
-    }, nil
+	return LastFmArt{
+		lastfmart.CheckAPIKey,
+		lastfmart.AutoCorrect,
+		lastfmart.TrackCover,
+		lastfmart.AlbumCover,
+		lastfmart.ArtistCover,
+	}, nil
 }
 
 // Itunes configures and returns all the exported methods of the package itunesart
 func Itunes() ItunesArt {
-    return ItunesArt{
-        itunesart.TrackCover,
-        itunesart.AlbumCover,
-    }
+	return ItunesArt{
+		itunesart.TrackCover,
+		itunesart.AlbumCover,
+	}
 }
