@@ -1,5 +1,5 @@
 // Package lastfmart provides few helper methods to get album, artist or track
-// cover art from the Last.fm API
+// artworks from the Last.fm API
 package lastfmart
 
 import (
@@ -79,13 +79,21 @@ func setDefaultCover(res Result) Result {
     }
 
     v := reflect.ValueOf(res)
-    res.Default = v.Field(0).String()
+    for i := 0; i < v.NumField(); i++ {
+        value := v.Field(i).String()
+
+        if len(value) > 0 {
+            res.Default = value
+            return res
+        }
+    }
+
     return res
 }
 
-// Build all the images into size typed object for easy access
+// Build all the artwork into size typed object for easy access
 // { Result.SizeName }
-// e.g: Result.Small would return the url for a small size cover art
+// e.g: Result.Small would return the url for a small size artwork
 func buildResult(images []image) (Result, error) {
     res := Result{}
     min := false
@@ -176,7 +184,7 @@ func request(url string) ([]byte, error) {
     return body, err
 }
 
-// AlbumCover gets the album cover art from the Last.fm database through out it's
+// AlbumCover gets the album artwork from the Last.fm database through out it's
 // dedicated API.
 func AlbumCover(album string, artist string) (Result, error) {
     Url := apiUrl + "album.getinfo&api_key=" + apiKey + "&album="
@@ -194,7 +202,7 @@ func AlbumCover(album string, artist string) (Result, error) {
     return parseResults(data, "album")
 }
 
-// ArtistCover gets the artist cover art from the Last.fm database through out it's
+// ArtistCover gets the artist artwork from the Last.fm database through out it's
 // dedicated API.
 func ArtistCover(artist string) (Result, error) {
     Url := apiUrl + "artist.getinfo&api_key=" + apiKey + "&artist="
@@ -212,7 +220,7 @@ func ArtistCover(artist string) (Result, error) {
     return parseResults(data, "artist")
 }
 
-// TrackCover gets the track cover art from the Last.fm database through out it's
+// TrackCover gets the track artwork from the Last.fm database through out it's
 // dedicated API.
 func TrackCover(track string, artist string) (Result, error) {
     Url := apiUrl + "track.getinfo&api_key=" + apiKey + "&artist="
