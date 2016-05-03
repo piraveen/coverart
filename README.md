@@ -44,7 +44,7 @@ itunes := coverart.Itunes()
 Then follow the [Itunes Helper methods](#using-itunes-search-api)
 
 #### Examples
-You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/defaults_test.go) file.
+You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/coverart_test.go) file.
 
 ### Using Last.fm API
 Read more about the [last.fm API](http://last.fm).
