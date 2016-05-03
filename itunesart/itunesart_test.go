@@ -1,119 +1,39 @@
 package itunesart_test
 
 import (
-    "os"
 	"fmt"
-    "testing"
 	"github.com/piraveen/coverart/itunesart"
+	"testing"
 )
 
 func TestAlbumCover(t *testing.T) {
-    // The API Keys can be defined in your code itself, however I recommend
-    // loading them through an environment variable like this:
-    apiKey := os.Getenv("LASTFM_APIKEY")
-    itunesart.Configure(apiKey)
-
-    if !itunesart.CheckAPIKey() {
-        // Abort action
-        fmt.Printf("No API Key or incorrectly set\n")
-        // Output: No API Key or incorrectly set
-        return;
-    }
-
-    results, err := itunesart.AlbumCover("halcyon days", "ellie goulding")
-    if err == nil {
-        fmt.Printf("AlbumCover %v\n", results.Default)
-        // Output: AlbumCover http://img2-ak.lst.fm/i/u/arQ/e0a131728ae7438d8b7adf87ae323b46.png
-    }
-}
-
-func TestArtistCover(t *testing.T) {
-    // The API Keys can be defined in your code itself, however I recommend
-    // loading them through an environment variable like this:
-    apiKey := os.Getenv("LASTFM_APIKEY")
-    itunesart.Configure(apiKey)
-
-    if !itunesart.CheckAPIKey() {
-        // Abort action
-        fmt.Printf("No API Key or incorrectly set\n")
-        // Output: No API Key or incorrectly set
-        return;
-    }
-
-    results, err := itunesart.ArtistCover("ellie goulding")
-    if err == nil {
-        fmt.Printf("ArtistCover %v\n", results.Default)
-        // Output: ArtistCover http://img2-ak.lst.fm/i/u/arQ/eb410194931c9427e2240023426be62b.png
-    }
+	results, err := itunesart.AlbumCover("halcyon days", "ellie goulding")
+	if err == nil {
+		fmt.Printf("AlbumCover %v\n", results.Default)
+		// Output: AlbumCover http://is3.mzstatic.com/image/thumb/Music4/v4/38/42/2b/38422b5a-d597-c4ac-5287-be05cd05dc9e/source/100x100bb.jpg
+	}
 }
 
 func TestTrackCover(t *testing.T) {
-    // The API Keys can be defined in your code itself, however I recommend
-    // loading them through an environment variable like this:
-    apiKey := os.Getenv("LASTFM_APIKEY")
-    itunesart.Configure(apiKey)
-
-    if !itunesart.CheckAPIKey() {
-        // Abort action
-        fmt.Printf("No API Key or incorrectly set\n")
-        // Output: No API Key or incorrectly set
-        return;
-    }
-
-    results, err := itunesart.TrackCover("lights", "ellie goulding")
-    if err == nil {
-        fmt.Printf("TrackCover %v\n", results.Default)
-        // Output: TrackCover http://img2-ak.lst.fm/i/u/34s/24029dde6b1345dea4aadfcfe4126b9c.png
-    }
+	results, err := itunesart.TrackCover("lights", "ellie goulding")
+	if err == nil {
+		fmt.Printf("TrackCover %v\n", results.Default)
+		// Output: TrackCover http://is3.mzstatic.com/image/thumb/Music/v4/d7/67/6a/d7676ac4-c1a2-d159-70be-08ff99ee99e4/source/100x100bb.jpg
+	}
 }
 
 func ExampleAlbumCover() {
-    // The API Keys can be defined in your code itself, however I recommend
-    // loading them through an environment variable like this:
-    // apiKey := os.Getenv("LASTFM_APIKEY")
-    itunesart.Configure("LASTFM_APIKEY")
-
-    if !itunesart.CheckAPIKey() {
-        // Abort action
-        return;
-    }
-
-    results, err := itunesart.AlbumCover("halcyon days", "ellie goulding")
-    if err == nil {
-        fmt.Printf("AlbumCover %v\n", results.Default)
-    }
-}
-
-func ExampleArtistCover() {
-    // The API Keys can be defined in your code itself, however I recommend
-    // loading them through an environment variable like this:
-    // apiKey := os.Getenv("LASTFM_APIKEY")
-    itunesart.Configure("LASTFM_APIKEY")
-
-    if !itunesart.CheckAPIKey() {
-        // Abort action
-        return;
-    }
-
-    results, err := itunesart.ArtistCover("ellie goulding")
-    if err == nil {
-        fmt.Printf("ArtistCover %v\n", results.Default)
-    }
+	results, err := itunesart.AlbumCover("halcyon days", "ellie goulding")
+	if err == nil {
+		fmt.Printf("AlbumCover %v\n", results.Default)
+		// Output: AlbumCover http://is3.mzstatic.com/image/thumb/Music4/v4/38/42/2b/38422b5a-d597-c4ac-5287-be05cd05dc9e/source/100x100bb.jpg
+	}
 }
 
 func ExampleTrackCover() {
-    // The API Keys can be defined in your code itself, however I recommend
-    // loading them through an environment variable like this:
-    // apiKey := os.Getenv("LASTFM_APIKEY")
-    itunesart.Configure("LASTFM_APIKEY")
-
-    if !itunesart.CheckAPIKey() {
-        // Abort action
-        return;
-    }
-
-    results, err := itunesart.TrackCover("lights", "ellie goulding")
-    if err == nil {
-        fmt.Printf("TrackCover %v\n", results.Default)
-    }
+	results, err := itunesart.TrackCover("lights", "ellie goulding")
+	if err == nil {
+		fmt.Printf("TrackCover %v\n", results.Default)
+		// Output: TrackCover http://is3.mzstatic.com/image/thumb/Music/v4/d7/67/6a/d7676ac4-c1a2-d159-70be-08ff99ee99e4/source/100x100bb.jpg
+	}
 }
