@@ -43,6 +43,9 @@ itunes := coverart.Itunes()
 ```
 Then follow the [Itunes Helper methods](#using-itunes-search-api)
 
+#### Examples
+You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/defaults_test.go) file.
+
 ### Using Last.fm API
 Read more about the [last.fm API](http://last.fm).
 A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/coverart/lastfmart).
@@ -76,7 +79,7 @@ result, err = lastfmart.ArtistCover("artist name")
 result, err = lastfmart.TrackArt("track name", "artist name")
 ```
 #### Examples
-You can get some sample code for testing from [this](#lastfmart/lastfmart_test.go) file.
+You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/lastfmart/lastfmart_test.go) file.
 
 ### Using Itunes Search API
 Read more about the [Itunes Search API](https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/).
@@ -95,7 +98,7 @@ result, err = itunesart.AlbumCover("album name", "artist name")
 result, err = itunesart.TrackArt("track name", "artist name")
 ```
 #### Examples
-You can get some sample code for testing from [this](#itunesart/itunesart_test.go) file.
+You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/itunesart/itunesart_test.go) file.
 
 ## Documentation
 You can read the package in [documentation](https://godoc.org/github.com/piraveen/coverart) details in [Godoc](godoc.org).
