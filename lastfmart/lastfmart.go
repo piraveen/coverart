@@ -84,7 +84,6 @@ func setDefaultCover(res Result) Result {
 
         if len(value) > 0 {
             res.Default = value
-            return res
         }
     }
 
