@@ -1,4 +1,5 @@
 # CoverArt
+[![Build Status](https://travis-ci.org/piraveen/coverart.svg?branch=master)](https://travis-ci.org/piraveen/coverart)
 [![GoDoc](https://godoc.org/github.com/piraveen/coverart?status.svg)](https://godoc.org/github.com/piraveen/coverart)
 
 A simple Go package to get a track, artist or album artwork art from external APIs like
