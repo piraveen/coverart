@@ -15,6 +15,8 @@ var apiKey string
 var apiCorrect bool
 const apiUrl = "http://ws.audioscrobbler.com/2.0/?format=json&method="
 
+// The Result represents the specific size of artworks and contains the url of
+// each size of artwork returned by the Last.fm API
 type Result struct {
     Small       string
     Medium      string
