@@ -14,7 +14,8 @@ import (
 const apiUrlTrack = "https://itunes.apple.com/search?media=music&entity=musicTrack&limit=1&term="
 const apiUrlAlbum = "https://itunes.apple.com/search?media=music&entity=album&limit=1&term="
 
-// The Result represents the specific size of artworks returned by the Itunes API
+// The Result represents the specific size of artworks and contains the url of
+// each size of artwork returned by the Itunes API
 type Result struct {
 	Tiny    string
 	Small   string
