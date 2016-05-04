@@ -1,6 +1,6 @@
 # CoverArt
-[![Build Status](https://travis-ci.org/piraveen/coverart.svg?branch=master)](https://travis-ci.org/piraveen/coverart)
-[![GoDoc](https://godoc.org/github.com/piraveen/coverart?status.svg)](https://godoc.org/github.com/piraveen/coverart)
+[![Build Status](https://travis-ci.org/piraveen/go-coverart.svg?branch=master)](https://travis-ci.org/piraveen/go-coverart)
+[![GoDoc](https://godoc.org/github.com/piraveen/go-coverart?status.svg)](https://godoc.org/github.com/piraveen/go-coverart)
 
 A simple Go package to get a track, artist or album artwork art from external APIs like
 [Last.fm](http://www.last.fm), [Spotify](https://www.spotify.com),
@@ -12,24 +12,24 @@ etc...
 ## Install
 Full package
 ```bash
-go get github.com/piraveen/coverart
+go get github.com/piraveen/go-coverart
 ```
 Last.fm package only
 ```bash
-go get github.com/piraveen/coverart/lastfmart
+go get github.com/piraveen/go-coverart/lastfmart
 ```
 Itunes package only
 ```bash
-go get github.com/piraveen/coverart/itunesart
+go get github.com/piraveen/go-coverart/itunesart
 ```
 
 ## Commands
 ### Using All
-A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/coverart).
+A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/go-coverart).
 
 - Importing
 ```go
-import "github.com/piraveen/coverart"
+import "github.com/piraveen/go-coverart"
 ```
 
 - Setup Last.fm
@@ -45,23 +45,23 @@ itunes := coverart.Itunes()
 Then follow the [Itunes Helper methods](#using-itunes-search-api)
 
 #### Examples
-You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/coverart_test.go) file.
+You can get some sample code for testing from [this](https://github.com/piraveen/go-coverart/blob/master/coverart_test.go) file.
 
 ### Using Last.fm API
 Read more about the [last.fm API](http://last.fm).
-A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/coverart/lastfmart).
+A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/go-coverart/lastfmart).
 
 - Importing
 ```go
-import "github.com/piraveen/coverart/lastfmart"
+import "github.com/piraveen/go-coverart/lastfmart"
 ```
 - Configuration
 ```go
 lastfmart.Configure("LASTFM_APIKEY")
 ```
-- Checking if API Key is set
+- Checking if API Key is set and it's validity
 ```go
-lastfmart.CheckAPIKey()
+err := lastfmart.CheckAPIKey()
 ```
 - Enable Auto correction
 ```go
@@ -80,15 +80,15 @@ result, err = lastfmart.ArtistCover("artist name")
 result, err = lastfmart.TrackArt("track name", "artist name")
 ```
 #### Examples
-You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/lastfmart/lastfmart_test.go) file.
+You can get some sample code for testing from [this](https://github.com/piraveen/go-coverart/blob/master/lastfmart/lastfmart_test.go) file.
 
 ### Using Itunes Search API
 Read more about the [Itunes Search API](https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/).
-A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/coverart/itunesart).
+A full Go documentation is available for this package [here](https://godoc.org/github.com/piraveen/go-coverart/itunesart).
 
 - Importing
 ```go
-import "github.com/piraveen/coverart/itunesart"
+import "github.com/piraveen/go-coverart/itunesart"
 ```
 - Get Album Artwork
 ```go
@@ -99,7 +99,7 @@ result, err = itunesart.AlbumCover("album name", "artist name")
 result, err = itunesart.TrackArt("track name", "artist name")
 ```
 #### Examples
-You can get some sample code for testing from [this](https://github.com/piraveen/coverart/blob/master/itunesart/itunesart_test.go) file.
+You can get some sample code for testing from [this](https://github.com/piraveen/go-coverart/blob/master/itunesart/itunesart_test.go) file.
 
 ## Documentation
-You can read the package in [documentation](https://godoc.org/github.com/piraveen/coverart) details in [Godoc](godoc.org).
+You can read the package in [documentation](https://godoc.org/github.com/piraveen/go-coverart) details in [Godoc](godoc.org).

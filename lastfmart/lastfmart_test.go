@@ -2,7 +2,7 @@ package lastfmart_test
 
 import (
 	"fmt"
-	"github.com/piraveen/coverart/lastfmart"
+	"github.com/piraveen/go-coverart/lastfmart"
 	"os"
 	"testing"
 )

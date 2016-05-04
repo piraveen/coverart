@@ -2,7 +2,7 @@ package itunesart_test
 
 import (
 	"fmt"
-	"github.com/piraveen/coverart/itunesart"
+	"github.com/piraveen/go-coverart/itunesart"
 	"testing"
 )
 

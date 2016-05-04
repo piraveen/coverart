@@ -2,7 +2,7 @@ package coverart_test
 
 import (
 	"fmt"
-	"github.com/piraveen/coverart"
+	"github.com/piraveen/go-coverart"
 	"os"
 	"testing"
 )
