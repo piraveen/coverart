@@ -15,6 +15,7 @@ var apiKey string
 var apiCorrect bool
 
 const apiUrl = "http://ws.audioscrobbler.com/2.0/?format=json&method="
+const checkApiUrl = apiUrl + "user.getinfo&user=rj&api_key="
 
 // The Result represents the specific size of artworks and contains the url of
 // each size of artwork returned by the Last.fm API
@@ -65,15 +66,30 @@ func AutoCorrect(act bool) {
 	apiCorrect = true
 }
 
+// SetAPIKey provides a method to update the Last.fm API Key
+func SetAPIKey(key string) {
+	apiKey = url.QueryEscape(key)
+}
+
 // Configure must be called before calling any other requests to set the Last.fm API Key
 func Configure(key string) {
 	apiKey = url.QueryEscape(key)
 	apiCorrect = false
 }
 
-// CheckAPIKey provides a simple method to verify if the API Key has been set
-func CheckAPIKey() bool {
-	return len(apiKey) > 0
+// CheckAPIKey provides a simple method to verify if the API Key has been set and
+// if it is valid
+func CheckAPIKey() error {
+	if len(apiKey) == 0 {
+		return errors.New("API Key is not set")
+	}
+
+	_, err := request(checkApiUrl + apiKey)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func setDefaultCover(res Result) Result {

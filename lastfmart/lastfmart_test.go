@@ -13,7 +13,7 @@ func TestAlbumCover(t *testing.T) {
 	apiKey := os.Getenv("LASTFM_APIKEY")
 	lastfmart.Configure(apiKey)
 
-	if !lastfmart.CheckAPIKey() {
+	if err := lastfmart.CheckAPIKey(); err != nil {
 		// Abort action
 		fmt.Printf("No API Key or incorrectly set\n")
 		// Output: No API Key or incorrectly set
@@ -33,7 +33,7 @@ func TestArtistCover(t *testing.T) {
 	apiKey := os.Getenv("LASTFM_APIKEY")
 	lastfmart.Configure(apiKey)
 
-	if !lastfmart.CheckAPIKey() {
+	if err := lastfmart.CheckAPIKey(); err != nil {
 		// Abort action
 		fmt.Printf("No API Key or incorrectly set\n")
 		// Output: No API Key or incorrectly set
@@ -53,7 +53,7 @@ func TestTrackCover(t *testing.T) {
 	apiKey := os.Getenv("LASTFM_APIKEY")
 	lastfmart.Configure(apiKey)
 
-	if !lastfmart.CheckAPIKey() {
+	if err := lastfmart.CheckAPIKey(); err != nil {
 		// Abort action
 		fmt.Printf("No API Key or incorrectly set\n")
 		// Output: No API Key or incorrectly set
@@ -73,7 +73,7 @@ func ExampleAlbumCover() {
 	// apiKey := os.Getenv("LASTFM_APIKEY")
 	lastfmart.Configure("LASTFM_APIKEY")
 
-	if !lastfmart.CheckAPIKey() {
+	if err := lastfmart.CheckAPIKey(); err != nil {
 		// Abort action
 		return
 	}
@@ -90,7 +90,7 @@ func ExampleArtistCover() {
 	// apiKey := os.Getenv("LASTFM_APIKEY")
 	lastfmart.Configure("LASTFM_APIKEY")
 
-	if !lastfmart.CheckAPIKey() {
+	if err := lastfmart.CheckAPIKey(); err != nil {
 		// Abort action
 		return
 	}
@@ -107,7 +107,7 @@ func ExampleTrackCover() {
 	// apiKey := os.Getenv("LASTFM_APIKEY")
 	lastfmart.Configure("LASTFM_APIKEY")
 
-	if !lastfmart.CheckAPIKey() {
+	if err := lastfmart.CheckAPIKey(); err != nil {
 		// Abort action
 		return
 	}

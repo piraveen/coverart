@@ -11,7 +11,6 @@
 package coverart
 
 import (
-	"errors"
 	"github.com/piraveen/coverart/lastfmart"
 	"github.com/piraveen/coverart/itunesart"
 )
@@ -24,8 +23,9 @@ type ItunesArt struct {
 
 // The LastFmArt represents the specific helper methods of the lastfmart package
 type LastFmArt struct {
-	CheckAPIKey func() bool
+	CheckAPIKey func() error
 	AutoCorrect func(v bool)
+	SetAPIKey	func(k string)
 	TrackCover  func(track string, artist string) (lastfmart.Result, error)
 	AlbumCover  func(album string, artist string) (lastfmart.Result, error)
 	ArtistCover func(artist string) (lastfmart.Result, error)
@@ -35,13 +35,14 @@ type LastFmArt struct {
 func LastFm(apiKey string) (LastFmArt, error) {
 	lastfmart.Configure(apiKey)
 
-	if !lastfmart.CheckAPIKey() {
-		return LastFmArt{}, errors.New("API Key is not set")
+	if err := lastfmart.CheckAPIKey(); err != nil {
+		return LastFmArt{}, err
 	}
 
 	return LastFmArt{
 		lastfmart.CheckAPIKey,
 		lastfmart.AutoCorrect,
+		lastfmart.SetAPIKey,
 		lastfmart.TrackCover,
 		lastfmart.AlbumCover,
 		lastfmart.ArtistCover,
