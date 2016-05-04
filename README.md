@@ -12,15 +12,15 @@ etc...
 ## Install
 Full package
 ```bash
-go get github.com/piraveen/go-coverart
+go get -u github.com/piraveen/go-coverart
 ```
 Last.fm package only
 ```bash
-go get github.com/piraveen/go-coverart/lastfmart
+go get -u github.com/piraveen/go-coverart/lastfmart
 ```
 Itunes package only
 ```bash
-go get github.com/piraveen/go-coverart/itunesart
+go get -u github.com/piraveen/go-coverart/itunesart
 ```
 
 ## Commands
