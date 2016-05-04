@@ -103,3 +103,8 @@ You can get some sample code for testing from [this](https://github.com/piraveen
 
 ## Documentation
 You can read the package in [documentation](https://godoc.org/github.com/piraveen/go-coverart) details in [Godoc](godoc.org).
+
+## Feedback
+If you have any suggestions or improvements, please do open an issue [here](https://github.com/piraveen/go-coverart/issues).
+
+Cheers :)
