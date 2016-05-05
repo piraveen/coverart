@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 	"errors"
 	"fmt"
 	"os"
@@ -118,10 +119,12 @@ func getAccessToken(ec string) error {
 	return nil
 }
 
+// Used to set the access token in the current process environment
 func setToken(t string) {
 	os.Setenv("SPOTIFY_ACCESSTOKEN", t)
 }
 
+// Used to get the access token in the current process environment
 func getToken() string {
 	return os.Getenv("SPOTIFY_ACCESSTOKEN")
 }
@@ -173,16 +176,19 @@ func buildResult(sItem item) (Result, error) {
 	}
 
 	for key, value := range sItem.Images {
-		switch sizes[key] {
-		default:
+		if key > 2 {
 			res.Default = value.Url
-		case "small":
-			res.Small = value.Url
-		case "medium":
-			res.Medium = value.Url
-		case "large":
-			res.Large = value.Url
-			res.Default = value.Url
+		} else {
+			switch sizes[key] {
+			default:
+			case "small":
+				res.Small = value.Url
+			case "medium":
+				res.Medium = value.Url
+			case "large":
+				res.Large = value.Url
+				res.Default = value.Url
+			}
 		}
 	}
 
@@ -255,9 +261,15 @@ func request(url string) ([]byte, error) {
 
 // AlbumCover gets the album artwork from the Spotify database through out it's
 // dedicated API.
-func AlbumCover(album string, artist string) (Result, error) {
+// Note: artist is optional, but if you specify one, it would give you a more
+// accurate result
+func AlbumCover(album string, artist ...string) (Result, error) {
 	Url := apiUrlAlbum + "album:" + url.QueryEscape(album + " ")
-	Url += "artist:" + url.QueryEscape(artist)
+	extras := url.QueryEscape(strings.Join(artist, ","))
+
+	if len(extras) > 0 {
+		Url += "artist:" + extras
+	}
 
 	data, err := request(Url)
 	if err != nil {
@@ -269,8 +281,15 @@ func AlbumCover(album string, artist string) (Result, error) {
 
 // ArtistCover gets the artist artwork from the Spotify database through out it's
 // dedicated API.
-func ArtistCover(artist string) (Result, error) {
-	Url := apiUrlArtist + url.QueryEscape(artist)
+// Note: genres is optional, but if you specify at least one, it would give you
+// a more accurate result
+func ArtistCover(artist string, genres ...string) (Result, error) {
+	Url := apiUrlArtist + "artist:" + url.QueryEscape(artist + " ")
+	extras := url.QueryEscape(strings.Join(genres, ","))
+
+	if len(extras) > 0 {
+		Url += "genre:" + extras
+	}
 
 	data, err := request(Url)
 	if err != nil {
