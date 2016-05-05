@@ -11,7 +11,6 @@ import (
 	"net/url"
 	"strings"
 	"errors"
-	"fmt"
 	"os"
 )
 
@@ -42,6 +41,7 @@ type item struct {
 	Type string `json:type`
 	Name string `json:name`
 	Images []image `json:images`
+	Album *item `json:album`
 }
 
 type items struct {
@@ -214,7 +214,7 @@ func parseResults(data []byte, parse string) (Result, error) {
 		}
 	case "track":
 		if resp.Tracks != nil && len(resp.Tracks.Items) > 0 {
-			return buildResult(resp.Tracks.Items[0])
+			return buildResult(*resp.Tracks.Items[0].Album)
 		}
 	case "artist":
 		if resp.Artists != nil && len(resp.Artists.Items) > 0 {
@@ -298,80 +298,23 @@ func ArtistCover(artist string, genres ...string) (Result, error) {
 
 	return parseResults(data, "artist")
 }
-//
-// // TrackCover gets the track artwork from the Spotify database through out it's
-// // dedicated API.
-// func TrackCover(track string, artist string) (Result, error) {
-// 	Url := apiUrl + "track.getinfo&api_key=" + apiKey + "&artist="
-// 	Url += url.QueryEscape(artist) + "&track=" + url.QueryEscape(track)
-//
-// 	// if apiCorrect {
-// 	// 	Url += "&autocorrect=1"
-// 	// }
-//
-// 	data, err := request(Url)
-// 	if err != nil {
-// 		return Result{}, err
-// 	}
-//
-// 	return parseResults(data, "track")
-// }
 
-func testParse() {
-	item := []byte(`{
-  "artists": {
-    "href": "https://api.spotify.com/v1/search?query=ellie+goulding&offset=0&limit=1&type=artist",
-    "items": [
-      {
-        "external_urls": {
-          "spotify": "https://open.spotify.com/artist/0X2BH1fck6amBIoJhDVmmJ"
-        },
-        "followers": {
-          "href": null,
-          "total": 2694010
-        },
-        "genres": [
-          "metropopolis",
-          "pop",
-          "synthpop"
-        ],
-        "href": "https://api.spotify.com/v1/artists/0X2BH1fck6amBIoJhDVmmJ",
-        "id": "0X2BH1fck6amBIoJhDVmmJ",
-        "images": [
-          {
-            "height": 1000,
-            "url": "https://i.scdn.co/image/cdfa418a53726ce2255cd543d4be873af49b5499",
-            "width": 1000
-          },
-          {
-            "height": 640,
-            "url": "https://i.scdn.co/image/3820c08b5be577f9dd746bedf80d6a85640d7a30",
-            "width": 640
-          },
-          {
-            "height": 200,
-            "url": "https://i.scdn.co/image/5987a65ac367986e41a7ec650c8d0eecb3963309",
-            "width": 200
-          },
-          {
-            "height": 64,
-            "url": "https://i.scdn.co/image/b72e148adf8cec8bf91784bee05d836858546367",
-            "width": 64
-          }
-        ],
-        "name": "Ellie Goulding",
-        "popularity": 86,
-        "type": "artist",
-        "uri": "spotify:artist:0X2BH1fck6amBIoJhDVmmJ"
-      }
-    ],
-    "limit": 1,
-    "next": "https://api.spotify.com/v1/search?query=ellie+goulding&offset=1&limit=1&type=artist",
-    "offset": 0,
-    "previous": null,
-    "total": 5
-  }
-}`)
+// TrackCover gets the track artwork from the Spotify database through out it's
+// dedicated API.
+// Note: artists is optional, but if you specify at least one, it would give you
+// a more accurate result
+func TrackCover(track string, artists ...string) (Result, error) {
+	Url := apiUrlTrack + "track:" + url.QueryEscape(track + " ")
+	extras := url.QueryEscape(strings.Join(artists, ","))
 
-	fmt.Println(item)
+	if len(extras) > 0 {
+		Url += "artist:" + extras
+	}
+
+	data, err := request(Url)
+	if err != nil {
+		return Result{}, err
+	}
+
+	return parseResults(data, "track")
 }
