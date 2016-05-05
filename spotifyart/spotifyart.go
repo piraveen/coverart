@@ -209,12 +209,10 @@ func parseResults(data []byte, parse string) (Result, error) {
 	case "track":
 		if resp.Tracks != nil && len(resp.Tracks.Items) > 0 {
 			return buildResult(resp.Tracks.Items[0])
-			// return buildResult(resp.Track.Album.Image)
 		}
 	case "artist":
 		if resp.Artists != nil && len(resp.Artists.Items) > 0 {
 			return buildResult(resp.Artists.Items[0])
-			// return buildResult(resp.Artist.Image)
 		}
 	}
 
@@ -269,23 +267,18 @@ func AlbumCover(album string, artist string) (Result, error) {
 	return parseResults(data, "album")
 }
 
-// // ArtistCover gets the artist artwork from the Spotify database through out it's
-// // dedicated API.
-// func ArtistCover(artist string) (Result, error) {
-// 	// Url := apiUrl + "artist.getinfo&api_key=" + apiKey + "&artist="
-// 	// Url += url.QueryEscape(artist)
-// 	// //
-// 	// // if apiCorrect {
-// 	// // 	Url += "&autocorrect=1"
-// 	// // }
-// 	//
-// 	// data, err := request(Url)
-// 	// if err != nil {
-// 	// 	return Result{}, err
-// 	// }
-//
-// 	return parseResults(data, "artist")
-// }
+// ArtistCover gets the artist artwork from the Spotify database through out it's
+// dedicated API.
+func ArtistCover(artist string) (Result, error) {
+	Url := apiUrlArtist + url.QueryEscape(artist)
+
+	data, err := request(Url)
+	if err != nil {
+		return Result{}, err
+	}
+
+	return parseResults(data, "artist")
+}
 //
 // // TrackCover gets the track artwork from the Spotify database through out it's
 // // dedicated API.

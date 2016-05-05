@@ -10,24 +10,21 @@ import (
 func TestAlbumCover(t *testing.T) {
 	// The API Keys can be defined in your code itself, however I recommend
 	// loading them through an environment variable like this:
-	c := os.Getenv("SPOTIFY_CLIENTID")
-	s := os.Getenv("SPOTIFY_CLIENTSECRET")
-
-
-	if err := spotifyart.Configure(c, s); err != nil {
-		// Abort action
-		fmt.Println(err)
-		fmt.Printf("No API Key or incorrectly set\n")
-		// Output: No API Key or incorrectly set
-		return
-	}
+	// c := os.Getenv("SPOTIFY_CLIENTID")
+	// s := os.Getenv("SPOTIFY_CLIENTSECRET")
+	//
+	//
+	// if err := spotifyart.Configure(c, s); err != nil {
+	// 	// Abort action
+	// 	fmt.Printf("No API Key or incorrectly set\n")
+	// 	// Output: No API Key or incorrectly set
+	// 	return
+	// }
 
 	results, err := spotifyart.AlbumCover("halcyon days", "ellie goulding")
 	if err == nil {
 		fmt.Printf("AlbumCover %v\n", results.Default)
-		// : AlbumCover http://img2-ak.lst.fm/i/u/arQ/e0a131728ae7438d8b7adf87ae323b46.png
-	} else {
-		fmt.Println(err)
+		// Output: AlbumCover https://i.scdn.co/image/c649d891ee6e0b86bf460bca264bd66715bd87f4
 	}
 }
 
