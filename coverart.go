@@ -6,13 +6,15 @@
 //
 // Concerned packages:
 //
-// "github.com/piraveen/coverart/itunesart"
-// "github.com/piraveen/coverart/lastfmart"
+// "github.com/piraveen/go-coverart/itunesart"
+// "github.com/piraveen/go-coverart/lastfmart"
+// "github.com/piraveen/go-coverart/spotifyart"
 package coverart
 
 import (
-	"github.com/piraveen/coverart/lastfmart"
-	"github.com/piraveen/coverart/itunesart"
+	"github.com/piraveen/go-coverart/itunesart"
+	"github.com/piraveen/go-coverart/lastfmart"
+	"github.com/piraveen/go-coverart/spotifyart"
 )
 
 // The ItunesArt represents the specific helper methods of the itunesart package
@@ -25,10 +27,20 @@ type ItunesArt struct {
 type LastFmArt struct {
 	CheckAPIKey func() error
 	AutoCorrect func(v bool)
-	SetAPIKey	func(k string)
+	SetAPIKey   func(k string)
 	TrackCover  func(track string, artist string) (lastfmart.Result, error)
 	AlbumCover  func(album string, artist string) (lastfmart.Result, error)
 	ArtistCover func(artist string) (lastfmart.Result, error)
+}
+
+// The SpotifyArt represents the specific helper methods of the spotifyart package
+type SpotifyArt struct {
+	CheckCredentials func() bool
+	GetAccessToken   func() error
+	Configure        func(clientId string, clientSecret string) error
+	TrackCover       func(track string, artists ...string) (spotifyart.Result, error)
+	AlbumCover       func(album string, artists ...string) (spotifyart.Result, error)
+	ArtistCover      func(artist string, genres ...string) (spotifyart.Result, error)
 }
 
 // LastFm configures and returns all the exported methods of the package lastfmart
@@ -54,5 +66,17 @@ func Itunes() ItunesArt {
 	return ItunesArt{
 		itunesart.TrackCover,
 		itunesart.AlbumCover,
+	}
+}
+
+// Spotify configures and returns all the exported methods of the package spotifyart
+func Spotify() SpotifyArt {
+	return SpotifyArt{
+		spotifyart.CheckCredentials,
+		spotifyart.GetAccessToken,
+		spotifyart.Configure,
+		spotifyart.TrackCover,
+		spotifyart.AlbumCover,
+		spotifyart.ArtistCover,
 	}
 }

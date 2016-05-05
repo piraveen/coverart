@@ -6,12 +6,12 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
-	"errors"
 	"os"
+	"strings"
 )
 
 var clId, clSecret string
@@ -32,25 +32,25 @@ type Result struct {
 }
 
 type image struct {
-	Width  *int `json:width`
-	Height *int `json:height`
+	Width  *int   `json:width`
+	Height *int   `json:height`
 	Url    string `json:url`
 }
 
 type item struct {
-	Type string `json:type`
-	Name string `json:name`
+	Type   string  `json:type`
+	Name   string  `json:name`
 	Images []image `json:images`
-	Album *item `json:album`
+	Album  *item   `json:album`
 }
 
 type items struct {
-	Items	[]item `json:items`
+	Items []item `json:items`
 }
 
 type httpSearch struct {
-	Albums  *items  `json:albums`
-	Tracks  *items  `json:tracks`
+	Albums  *items `json:albums`
+	Tracks  *items `json:tracks`
 	Artists *items `json:artists`
 }
 
@@ -74,28 +74,32 @@ type httpToken struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-// SetCredentials provides a method to set the  the Spotify Client Id and
-// Client Secret. This action will result in with a call to the Spotify API
-// to get an access token. The access token will allow you to have a higher
-// limit rate than unauthorized requests
-func SetCredentials(i string, s string) error {
-	clId, clSecret = i, s
-	return CheckCredentials()
-}
-
 // Configure is optional, you can use it to set the Spotify Client Id and
 // Client Secret. This action will result in with a call to the Spotify API
 // to get an access token. The access token will allow you to have a higher
 // limit rate than unauthorized requests
-func Configure(i string, s string) error {
-	return SetCredentials(i, s)
+func Configure(clientId string, clientSecret string) error {
+	clId, clSecret = clientId, clientSecret
+	return GetAccessToken()
 }
 
-// CheckCredentials provides a simple method to verify if the API Key has been set and
-// if it is valid
-func CheckCredentials() error {
+// CheckCredentials provides a simple method to verify if the Spotify API
+// Credentials have been set
+func CheckCredentials() bool {
 	if len(clId) == 0 || len(clSecret) == 0 {
-		return nil
+		return false
+	}
+
+	return true
+}
+
+// GetAccessToken provides a simple method to verify if the Spotify API
+// Credentials have been set and requests an access token from the Spotify API
+// to increase the requests rate limit. This method can be used to refresh the
+// access token too
+func GetAccessToken() error {
+	if !CheckCredentials() {
+		return errors.New("Invalid Client Id or Client Secret")
 	}
 
 	byteCreds := []byte(clId + ":" + clSecret)
@@ -169,7 +173,7 @@ func requestToken(req *http.Request) (*httpToken, error) {
 // e.g: Result.Small would return the url for a small size artwork
 func buildResult(sItem item) (Result, error) {
 	res := Result{}
-	sizes := []string{ "large", "medium", "small", }
+	sizes := []string{"large", "medium", "small"}
 
 	if len(sItem.Images) == 0 {
 		return res, errors.New("No image was found")
@@ -232,7 +236,7 @@ func request(url string) ([]byte, error) {
 	req, _ := http.NewRequest("GET", url, nil)
 
 	if len(getToken()) > 0 {
-		req.Header.Add("Authorization", "Bearer " + getToken())
+		req.Header.Add("Authorization", "Bearer "+getToken())
 	}
 
 	resp, err := client.Do(req)
@@ -261,11 +265,11 @@ func request(url string) ([]byte, error) {
 
 // AlbumCover gets the album artwork from the Spotify database through out it's
 // dedicated API.
-// Note: artist is optional, but if you specify one, it would give you a more
+// Note: artists is optional, but if you specify one, it would give you a more
 // accurate result
-func AlbumCover(album string, artist ...string) (Result, error) {
-	Url := apiUrlAlbum + "album:" + url.QueryEscape(album + " ")
-	extras := url.QueryEscape(strings.Join(artist, ","))
+func AlbumCover(album string, artists ...string) (Result, error) {
+	Url := apiUrlAlbum + "album:" + url.QueryEscape(album+" ")
+	extras := url.QueryEscape(strings.Join(artists, ","))
 
 	if len(extras) > 0 {
 		Url += "artist:" + extras
@@ -284,7 +288,7 @@ func AlbumCover(album string, artist ...string) (Result, error) {
 // Note: genres is optional, but if you specify at least one, it would give you
 // a more accurate result
 func ArtistCover(artist string, genres ...string) (Result, error) {
-	Url := apiUrlArtist + "artist:" + url.QueryEscape(artist + " ")
+	Url := apiUrlArtist + "artist:" + url.QueryEscape(artist+" ")
 	extras := url.QueryEscape(strings.Join(genres, ","))
 
 	if len(extras) > 0 {
@@ -304,7 +308,7 @@ func ArtistCover(artist string, genres ...string) (Result, error) {
 // Note: artists is optional, but if you specify at least one, it would give you
 // a more accurate result
 func TrackCover(track string, artists ...string) (Result, error) {
-	Url := apiUrlTrack + "track:" + url.QueryEscape(track + " ")
+	Url := apiUrlTrack + "track:" + url.QueryEscape(track+" ")
 	extras := url.QueryEscape(strings.Join(artists, ","))
 
 	if len(extras) > 0 {
