@@ -1,6 +1,6 @@
-// Package coverart provides a helper that imports the itunesart and lastfmart packages.
-// Then returns an access interface for each individual services to get album,
-// artist or track artworks.
+// Package coverart provides a helper that imports the spotifyart, itunesart and
+// lastfmart packages. Then returns an access interface for each individual
+// services to get album, artist or track artworks.
 //
 // Note: This is a lazy package to load all the sub-service packages concurrently.
 //
@@ -19,12 +19,14 @@ import (
 
 // The ItunesArt represents the specific helper methods of the itunesart package
 type ItunesArt struct {
+	Result     itunesart.Result
 	TrackCover func(track string, artist string) (itunesart.Result, error)
 	AlbumCover func(album string, artist string) (itunesart.Result, error)
 }
 
 // The LastFmArt represents the specific helper methods of the lastfmart package
 type LastFmArt struct {
+	Result      lastfmart.Result
 	CheckAPIKey func() error
 	AutoCorrect func(v bool)
 	SetAPIKey   func(k string)
@@ -35,6 +37,7 @@ type LastFmArt struct {
 
 // The SpotifyArt represents the specific helper methods of the spotifyart package
 type SpotifyArt struct {
+	Result           spotifyart.Result
 	CheckCredentials func() bool
 	GetAccessToken   func() error
 	Configure        func(clientId string, clientSecret string) error
@@ -52,6 +55,7 @@ func LastFm(apiKey string) (LastFmArt, error) {
 	}
 
 	return LastFmArt{
+		lastfmart.Result{},
 		lastfmart.CheckAPIKey,
 		lastfmart.AutoCorrect,
 		lastfmart.SetAPIKey,
@@ -64,6 +68,7 @@ func LastFm(apiKey string) (LastFmArt, error) {
 // Itunes configures and returns all the exported methods of the package itunesart
 func Itunes() ItunesArt {
 	return ItunesArt{
+		itunesart.Result{},
 		itunesart.TrackCover,
 		itunesart.AlbumCover,
 	}
@@ -72,6 +77,7 @@ func Itunes() ItunesArt {
 // Spotify configures and returns all the exported methods of the package spotifyart
 func Spotify() SpotifyArt {
 	return SpotifyArt{
+		spotifyart.Result{},
 		spotifyart.CheckCredentials,
 		spotifyart.GetAccessToken,
 		spotifyart.Configure,
