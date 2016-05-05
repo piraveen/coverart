@@ -3,21 +3,20 @@
 package spotifyart
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"reflect"
 	"errors"
-	"bytes"
 	"fmt"
 	"os"
 )
 
 var clId, clSecret string
 
-const apiUrl = "https://api.spotify.com/v1/search"
+const apiUrl = "https://api.spotify.com/v1"
 const apiUrlTrack = apiUrl + "/search?type=track&limit=1&q="
 const apiUrlAlbum = apiUrl + "/search?type=album&limit=1&q="
 const apiUrlArtist = apiUrl + "/search?type=artist&limit=1&q="
@@ -26,61 +25,58 @@ const apiUrlToken = "https://accounts.spotify.com/api/token"
 // The Result represents the specific size of artworks and contains the url of
 // each size of artwork returned by the Spotify API
 type Result struct {
-	Small      string
-	Medium     string
-	Large      string
-	Default    string
+	Large   string
+	Medium  string
+	Small   string
+	Default string
 }
 
 type image struct {
-	Size string `json:size`
-	Url  string `json:"#text"`
+	Width  *int `json:width`
+	Height *int `json:height`
+	Url    string `json:url`
 }
 
-type album struct {
-	Name  string  `json:name`
-	Image []image `json:image`
+type item struct {
+	Type string `json:type`
+	Name string `json:name`
+	Images []image `json:images`
 }
 
-type track struct {
-	Name  string `json:name`
-	Album *album `json:album`
-}
-
-type artist struct {
-	Name  string  `json:name`
-	Image []image `json:image`
+type items struct {
+	Items	[]item `json:items`
 }
 
 type httpSearch struct {
-	Album  *album  `json:album`
-	Artist *artist `json:artist`
-	Track  *track  `json:track`
+	Albums  *items  `json:albums`
+	Tracks  *items  `json:tracks`
+	Artists *items `json:artists`
 }
 
 type httpErrorDetails struct {
-	Status	int	`json:status`
-	Message	string	`json:message`
+	Status  int    `json:status`
+	Message string `json:message`
 }
 
 type httpError struct {
-	Error	*httpErrorDetails	`json:error`
+	Error *httpErrorDetails `json:error`
 }
 
 type httpTokenError struct {
-	Error	*string	`json:error`
-	Description	*string	`json:"errorerror_description,omitempty"`
+	Error       *string `json:error`
+	Description *string `json:"errorerror_description,omitempty"`
 }
 
 type httpToken struct {
-	AccessToken	string	`json:"access_token"`
-	TokenType	string	`json:"token_type"`
-	ExpiresIn	int	`json:"expires_in"`
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+	ExpiresIn   int    `json:"expires_in"`
 }
 
 // SetCredentials provides a method to set the  the Spotify Client Id and
 // Client Secret. This action will result in with a call to the Spotify API
-// to get an access token
+// to get an access token. The access token will allow you to have a higher
+// limit rate than unauthorized requests
 func SetCredentials(i string, s string) error {
 	clId, clSecret = i, s
 	return CheckCredentials()
@@ -88,7 +84,8 @@ func SetCredentials(i string, s string) error {
 
 // Configure is optional, you can use it to set the Spotify Client Id and
 // Client Secret. This action will result in with a call to the Spotify API
-// to get an access token
+// to get an access token. The access token will allow you to have a higher
+// limit rate than unauthorized requests
 func Configure(i string, s string) error {
 	return SetCredentials(i, s)
 }
@@ -102,16 +99,16 @@ func CheckCredentials() error {
 
 	byteCreds := []byte(clId + ":" + clSecret)
 	encodedCres := base64.StdEncoding.EncodeToString(byteCreds)
-	return getAccessToken(encodedCres);
+	return getAccessToken(encodedCres)
 }
 
 // Used to get an access token from the Spotify API
 func getAccessToken(ec string) error {
-	data := url.Values{"grant_type": { "client_credentials" }}
+	data := url.Values{"grant_type": {"client_credentials"}}
 	req, _ := http.NewRequest("POST", apiUrlToken, bytes.NewBufferString(data.Encode()))
 
-	req.Header.Add("Authorization", "Basic " + ec)
-    req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("Authorization", "Basic "+ec)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	resToken, err := requestToken(req)
 	if err != nil {
 		return err
@@ -149,7 +146,6 @@ func requestToken(req *http.Request) (*httpToken, error) {
 
 	err = json.Unmarshal(body, &resErr)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
@@ -165,53 +161,32 @@ func requestToken(req *http.Request) (*httpToken, error) {
 	return &resToken, nil
 }
 
-// Sets the default artwork for the requested item
-func setDefaultCover(res Result) Result {
-	if len(res.Default) > 0 {
-		return res
-	}
-
-	v := reflect.ValueOf(res)
-	for i := 0; i < v.NumField(); i++ {
-		value := v.Field(i).String()
-
-		if len(value) > 0 {
-			res.Default = value
-		}
-	}
-
-	return res
-}
-
 // Build all the artwork into size typed object for easy access
 // { Result.SizeName }
 // e.g: Result.Small would return the url for a small size artwork
-func buildResult(images []image) (Result, error) {
+func buildResult(sItem item) (Result, error) {
 	res := Result{}
-	min := false
+	sizes := []string{ "large", "medium", "small", }
 
-	for _, value := range images {
-		if len(value.Url) > 0 {
-			min = true
-
-			switch value.Size {
-			default:
-				res.Default = value.Url
-			case "small":
-				res.Small = value.Url
-			case "medium":
-				res.Medium = value.Url
-			case "large":
-				res.Large = value.Url
-			}
-		}
-	}
-
-	if !min {
+	if len(sItem.Images) == 0 {
 		return res, errors.New("No image was found")
 	}
 
-	return setDefaultCover(res), nil
+	for key, value := range sItem.Images {
+		switch sizes[key] {
+		default:
+			res.Default = value.Url
+		case "small":
+			res.Small = value.Url
+		case "medium":
+			res.Medium = value.Url
+		case "large":
+			res.Large = value.Url
+			res.Default = value.Url
+		}
+	}
+
+	return res, nil
 }
 
 // Parse http response and build results based on requested type
@@ -228,16 +203,18 @@ func parseResults(data []byte, parse string) (Result, error) {
 	default:
 		return Result{}, errors.New("No image was found")
 	case "album":
-		if resp.Album != nil {
-			return buildResult(resp.Album.Image)
-		}
-	case "artist":
-		if resp.Artist != nil {
-			return buildResult(resp.Artist.Image)
+		if resp.Albums != nil && len(resp.Albums.Items) > 0 {
+			return buildResult(resp.Albums.Items[0])
 		}
 	case "track":
-		if resp.Track != nil && resp.Track.Album != nil {
-			return buildResult(resp.Track.Album.Image)
+		if resp.Tracks != nil && len(resp.Tracks.Items) > 0 {
+			return buildResult(resp.Tracks.Items[0])
+			// return buildResult(resp.Track.Album.Image)
+		}
+	case "artist":
+		if resp.Artists != nil && len(resp.Artists.Items) > 0 {
+			return buildResult(resp.Artists.Items[0])
+			// return buildResult(resp.Artist.Image)
 		}
 	}
 
@@ -247,15 +224,21 @@ func parseResults(data []byte, parse string) (Result, error) {
 // Executes an http request and returns error or response body
 func request(url string) ([]byte, error) {
 	resErr := httpError{}
-	resp, err := http.Get(url)
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", url, nil)
 
+	if len(getToken()) > 0 {
+		req.Header.Add("Authorization", "Bearer " + getToken())
+	}
+
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
 	}
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
 
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -275,12 +258,8 @@ func request(url string) ([]byte, error) {
 // AlbumCover gets the album artwork from the Spotify database through out it's
 // dedicated API.
 func AlbumCover(album string, artist string) (Result, error) {
-	Url := apiUrlAlbum + "album:" + url.QueryEscape(album)
-	Url += " artist:" + url.QueryEscape(artist)
-
-	// if apiCorrect {
-	// 	Url += "&autocorrect=1"
-	// }
+	Url := apiUrlAlbum + "album:" + url.QueryEscape(album + " ")
+	Url += "artist:" + url.QueryEscape(artist)
 
 	data, err := request(Url)
 	if err != nil {
@@ -325,7 +304,6 @@ func AlbumCover(album string, artist string) (Result, error) {
 //
 // 	return parseResults(data, "track")
 // }
-
 
 func testParse() {
 	item := []byte(`{

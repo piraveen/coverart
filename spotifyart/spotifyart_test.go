@@ -22,11 +22,13 @@ func TestAlbumCover(t *testing.T) {
 		return
 	}
 
-	// results, err := spotifyart.AlbumCover("halcyon days", "ellie goulding")
-	// if err == nil {
-	// 	fmt.Printf("AlbumCover %v\n", results.Default)
-	// 	// : AlbumCover http://img2-ak.lst.fm/i/u/arQ/e0a131728ae7438d8b7adf87ae323b46.png
-	// }
+	results, err := spotifyart.AlbumCover("halcyon days", "ellie goulding")
+	if err == nil {
+		fmt.Printf("AlbumCover %v\n", results.Default)
+		// : AlbumCover http://img2-ak.lst.fm/i/u/arQ/e0a131728ae7438d8b7adf87ae323b46.png
+	} else {
+		fmt.Println(err)
+	}
 }
 
 // func TestArtistCover(t *testing.T) {
