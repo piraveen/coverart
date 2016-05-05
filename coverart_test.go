@@ -10,10 +10,10 @@ import (
 func TestItunes(t *testing.T) {
 	itunes := coverart.Itunes()
 
-	results, err := itunes.AlbumCover("halcyon days", "ellie goulding")
+	results, err := itunes.AlbumCover("stay", "rihanna")
 	if err == nil {
 		fmt.Printf("AlbumCover %v\n", results.Default)
-		// Output: AlbumCover http://is3.mzstatic.com/image/thumb/Music4/v4/38/42/2b/38422b5a-d597-c4ac-5287-be05cd05dc9e/source/100x100bb.jpg
+		// Output: AlbumCover http://is4.mzstatic.com/image/thumb/Music/v4/2c/0c/ca/2c0ccaaa-8e92-a3bb-81b4-1daa12062db7/source/100x100bb.jpg
 	}
 }
 
