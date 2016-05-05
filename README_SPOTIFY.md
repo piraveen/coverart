@@ -24,17 +24,17 @@ import "github.com/piraveen/go-coverart/spotifyart"
     API requests by increasing the requests rate limit with an access token.
 
     - Configure
-        ```go
-        err := spotifyart.Configure("SPOTIFY_CLIENTID", "SPOTIFY_CLIENTSECRET")
-        ```
+    ```go
+    err := spotifyart.Configure("SPOTIFY_CLIENTID", "SPOTIFY_CLIENTSECRET")
+    ```
     - Checking if Client Id and Client Secret are set
-        ```go
-        status := spotifyart.CheckCredentials()
-        ```
+    ```go
+    status := spotifyart.CheckCredentials()
+    ```
     - Get or refresh Access (Note: Client Id and Client Secret must be set)
-        ```go
-        err := spotifyart.GetAccessToken()
-        ```
+    ```go
+    err := spotifyart.GetAccessToken()
+    ```
 
 - Get Album Artwork
 ```go
